@@ -41,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
     packaging {
         resources {
@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    val ktorVersion = "2.3.5"
+    val ktorVersion = "2.3.6"
     val serializationVersion = "1.6.0"
     val chuckerVersion = "4.0.0"
 
