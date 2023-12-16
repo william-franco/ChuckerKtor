@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.*
 import androidx.navigation.NavController
 
 import br.com.williamfranco.chuckerktor.src.features.settings.view_models.*
@@ -15,7 +16,7 @@ import br.com.williamfranco.chuckerktor.src.features.settings.view_models.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingView(navController: NavController, settingViewModel: SettingViewModel) {
-    val settingState by settingViewModel.isDarkTheme.collectAsState()
+    val settingState by settingViewModel.isDarkTheme.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {

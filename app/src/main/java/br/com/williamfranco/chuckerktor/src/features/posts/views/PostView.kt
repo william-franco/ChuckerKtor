@@ -10,6 +10,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.*
 import androidx.navigation.NavController
 
 import br.com.williamfranco.chuckerktor.src.features.posts.models.*
@@ -18,8 +19,8 @@ import br.com.williamfranco.chuckerktor.src.features.posts.view_models.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostView(navController: NavController, viewModel: PostViewModel) {
-    val postsState by viewModel.posts.collectAsState()
-    val isLoadingState by viewModel.isLoading.collectAsState()
+    val postsState by viewModel.posts.collectAsStateWithLifecycle()
+    val isLoadingState by viewModel.isLoading.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
