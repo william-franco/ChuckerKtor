@@ -1,22 +1,25 @@
 package br.com.williamfranco.chuckerktor.src.features.posts.repositories
 
+import br.com.williamfranco.chuckerktor.src.common.constants.ApiConstant
+import br.com.williamfranco.chuckerktor.src.common.patterns.ResultPattern
+import br.com.williamfranco.chuckerktor.src.common.services.HttpService
+import br.com.williamfranco.chuckerktor.src.features.posts.exceptions.PostException
 import br.com.williamfranco.chuckerktor.src.features.posts.models.PostModel
-import br.com.williamfranco.chuckerktor.src.services.HttpService
-import br.com.williamfranco.httpktorkmm.environments.Environments
 
 interface PostRepository {
-    suspend fun getPosts(): List<PostModel>
+    suspend fun getPosts(): ResultPattern<List<PostModel>, PostException>
 }
 
-class PostRepositoryImpl(private val httpService: HttpService) : PostRepository {
-    private val endpoint = Environments.baseURL + Environments.posts
+class PostRepositoryImpl(
+    private val httpService: HttpService,
+) : PostRepository {
 
-    override suspend fun getPosts(): List<PostModel> {
-        try {
-            return httpService.getData(endpoint)
-        } catch (e: Exception) {
-            println("Repository error: Failed to load data.")
-            throw e
+    override suspend fun getPosts(): ResultPattern<List<PostModel>, PostException> {
+        return try {
+            val posts: List<PostModel> = httpService.getData(ApiConstant.POSTS)
+            ResultPattern.Success(posts)
+        } catch (error: Exception) {
+            ResultPattern.Error(PostException("Failed to load posts: $error"))
         }
     }
 }

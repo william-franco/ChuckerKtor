@@ -1,25 +1,81 @@
-# ChuckerKtor
+# Chucker Ktor
 
-App for http request usign chucker interceptor and ktor. 
+App Android de exemplo que lista posts da [JSONPlaceholder API](https://jsonplaceholder.typicode.com) com **Ktor Client** e inspeciona o tráfego HTTP via **Chucker**, seguindo a arquitetura do [Resonance](../../Resonance).
 
+## Stack
 
-## Author
+| Tecnologia | Versão |
+|------------|--------|
+| Android Gradle Plugin | 9.4.0 |
+| Kotlin | 2.2.10 |
+| Compose BOM | 2026.02.01 |
+| Koin | 4.2.2 |
+| Navigation Compose | 2.9.3 |
+| Ktor Client | 3.1.3 |
+| Chucker | 4.3.1 |
+| DataStore | 1.1.7 |
+| compileSdk / targetSdk | 37 |
+| minSdk | 29 |
+| JVM | 21 |
 
-William Franco (Dev mobile).
+## Arquitetura
 
+MVVM por feature com Koin para injeção de dependências:
 
-## ScreenShots
+```
+MainActivity → RoutesApp → PostRoute → PostViewModel → PostRepository → HttpService (Ktor + Chucker)
+                ↓
+           SettingRoute → SettingViewModel → SettingRepository → DataStore
+```
 
-| Image 1 | Image 2 | Image 3 | Image 4 |
-|----------|----------|----------|----------|
-| ![App Screenshot](assets/screenshots/screen-1.png) | ![App Screenshot](assets/screenshots/screen-2.png) | ![App Screenshot](assets/screenshots/screen-3.png) | ![App Screenshot](assets/screenshots/screen-4.png) |
+### Estrutura de pacotes
 
+```
+src/
+├── common/
+│   ├── constants/       # ApiConstant, ValueConstant
+│   ├── patterns/        # StatePattern, ResultPattern
+│   └── services/        # HttpService (Ktor + ChuckerInterceptor)
+├── di/                  # Módulo Koin
+├── design/theme/        # Material 3
+├── routes/              # NavHost e rotas
+└── features/
+    ├── posts/           # Lista de posts (API)
+    └── settings/        # Tema escuro persistido (DataStore)
+```
+
+## Integração Chucker + Ktor
+
+O Chucker opera no nível OkHttp. O Ktor usa o engine `ktor-client-okhttp` com o interceptor injetado:
+
+```kotlin
+OkHttp.create { addInterceptor(chuckerInterceptor) }
+HttpClient(okhttpEngine) { install(Logging); install(ContentNegotiation) { json(...) } }
+```
+
+- **Debug:** `library:4.3.1` — notificação e UI de inspeção HTTP
+- **Release:** `library-no-op:4.3.1` — zero overhead em produção
+
+## Funcionalidades
+
+- Lista de posts com estados Initial, Loading, Success e Error
+- Pull-to-refresh e botão de atualização
+- Inspeção de requests/responses via notificação do Chucker (build debug)
+- Tela de settings com toggle de dark theme persistido via DataStore
+- Dialog About com nome do app, versão e copyright
+
+## Como usar o Chucker
+
+1. Instale o app em modo **debug**
+2. Abra a lista de posts (carrega automaticamente da API)
+3. Toque em refresh para gerar nova requisição
+4. Abra a **notificação do Chucker** ou o atalho na tela inicial para inspecionar o tráfego HTTP
 
 ## License
 
 MIT License
 
-Copyright (c) 2023 William Franco
+Copyright (c) 2026 William Franco
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

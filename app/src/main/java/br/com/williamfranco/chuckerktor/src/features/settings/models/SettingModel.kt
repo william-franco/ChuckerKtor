@@ -1,3 +1,5 @@
 package br.com.williamfranco.chuckerktor.src.features.settings.models
 
-data class ThemeModel(val isDark: Boolean)
+data class SettingModel(
+    val isDarkTheme: Boolean = false,
+)

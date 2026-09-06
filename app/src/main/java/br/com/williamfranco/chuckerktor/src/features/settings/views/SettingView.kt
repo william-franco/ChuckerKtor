@@ -1,57 +1,90 @@
 package br.com.williamfranco.chuckerktor.src.features.settings.views
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.*
-import androidx.navigation.NavController
-
-import br.com.williamfranco.chuckerktor.src.features.settings.view_models.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import br.com.williamfranco.chuckerktor.src.features.settings.models.SettingModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingView(navController: NavController, settingViewModel: SettingViewModel) {
-    val settingState by settingViewModel.isDarkTheme.collectAsStateWithLifecycle()
+fun SettingView(
+    setting: SettingModel,
+    onBack: () -> Unit,
+    onThemeChanged: (Boolean) -> Unit,
+) {
+    var showAboutDialog by remember { mutableStateOf(false) }
+
+    if (showAboutDialog) {
+        AlertDialog(
+            onDismissRequest = { showAboutDialog = false },
+            title = { Text("Chucker Ktor") },
+            text = {
+                Column {
+                    Text("Version 1.0.0")
+                    Text("© 2026 William Franco")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showAboutDialog = false }) {
+                    Text("OK")
+                }
+            },
+        )
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(text = "Settings")
-                },
+                title = { Text("Settings") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
             )
         },
-        content = {padding ->
-            Column(
-                modifier = Modifier.fillMaxSize().padding(padding)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Dark theme", color = Color.Black)
-                    Spacer(modifier = Modifier.weight(1f))
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            ListItem(
+                headlineContent = { Text("Dark theme") },
+                trailingContent = {
                     Switch(
-                        checked = settingState.isDark,
-                        onCheckedChange = { isChecked -> settingViewModel.updateTheme(isChecked) }
+                        checked = setting.isDarkTheme,
+                        onCheckedChange = onThemeChanged,
                     )
-                }
-            }
+                },
+            )
+            ListItem(
+                headlineContent = { Text("About") },
+                leadingContent = {
+                    Icon(Icons.Outlined.Info, contentDescription = null)
+                },
+                modifier = Modifier.clickable { showAboutDialog = true },
+            )
         }
-    )
+    }
 }
