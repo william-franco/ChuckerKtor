@@ -1,11 +1,11 @@
 # Chucker Ktor
 
-App Android de exemplo que lista posts da [JSONPlaceholder API](https://jsonplaceholder.typicode.com) com **Ktor Client** e inspeciona o tráfego HTTP via **Chucker**, seguindo a arquitetura do [Resonance](../../Resonance).
+Sample Android app that lists posts from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com) using Ktor Client and inspects HTTP traffic via Chucker, with feature-based MVVM and Koin.
 
 ## Stack
 
-| Tecnologia | Versão |
-|------------|--------|
+| Technology | Version |
+|------------|---------|
 | Android Gradle Plugin | 9.4.0 |
 | Kotlin | 2.2.10 |
 | Compose BOM | 2026.02.01 |
@@ -18,58 +18,53 @@ App Android de exemplo que lista posts da [JSONPlaceholder API](https://jsonplac
 | minSdk | 29 |
 | JVM | 21 |
 
-## Arquitetura
+## Architecture
 
-MVVM por feature com Koin para injeção de dependências:
-
-```
-MainActivity → RoutesApp → PostRoute → PostViewModel → PostRepository → HttpService (Ktor + Chucker)
-                ↓
-           SettingRoute → SettingViewModel → SettingRepository → DataStore
-```
-
-### Estrutura de pacotes
+Feature-based MVVM with Koin for dependency injection.
 
 ```
 src/
 ├── common/
-│   ├── constants/       # ApiConstant, ValueConstant
-│   ├── patterns/        # StatePattern, ResultPattern
-│   └── services/        # HttpService (Ktor + ChuckerInterceptor)
-├── di/                  # Módulo Koin
-├── design/theme/        # Material 3
-├── routes/              # NavHost e rotas
+│   ├── constants/
+│   ├── patterns/
+│   └── services/
+├── di/
+├── design/theme/
+├── routes/
 └── features/
-    ├── posts/           # Lista de posts (API)
-    └── settings/        # Tema escuro persistido (DataStore)
+    ├── posts/
+    └── settings/
 ```
 
-## Integração Chucker + Ktor
+## ScreenShots
 
-O Chucker opera no nível OkHttp. O Ktor usa o engine `ktor-client-okhttp` com o interceptor injetado:
+| Image 1 | Image 2 | Image 3 |
+|----------|----------|----------|
+| ![App Screenshot](assets/screenshots/screen-1.png) | ![App Screenshot](assets/screenshots/screen-2.png) | ![App Screenshot](assets/screenshots/screen-3.png) |
 
-```kotlin
-OkHttp.create { addInterceptor(chuckerInterceptor) }
-HttpClient(okhttpEngine) { install(Logging); install(ContentNegotiation) { json(...) } }
+| Image 4 | Image 5 | Image 6 |
+|----------|----------|----------|
+| ![App Screenshot](assets/screenshots/screen-4.png) | ![App Screenshot](assets/screenshots/screen-5.png) | ![App Screenshot](assets/screenshots/screen-6.png) |
+
+## Commits
+
 ```
-
-- **Debug:** `library:4.3.1` — notificação e UI de inspeção HTTP
-- **Release:** `library-no-op:4.3.1` — zero overhead em produção
-
-## Funcionalidades
-
-- Lista de posts com estados Initial, Loading, Success e Error
-- Pull-to-refresh e botão de atualização
-- Inspeção de requests/responses via notificação do Chucker (build debug)
-- Tela de settings com toggle de dark theme persistido via DataStore
-- Dialog About com nome do app, versão e copyright
-
-## Como usar o Chucker
-
-1. Instale o app em modo **debug**
-2. Abra a lista de posts (carrega automaticamente da API)
-3. Toque em refresh para gerar nova requisição
-4. Abra a **notificação do Chucker** ou o atalho na tela inicial para inspecionar o tráfego HTTP
+git add . && git commit -m ":rocket: Initial commit." && git push
+git add . && git commit -m ":building_construction: Added initial project architecture." && git push
+git add . && git commit -m ":building_construction: Update project architecture." && git push
+git add . && git commit -m ":memo: Updated project documentation." && git push
+git add . && git commit -m ":memo: Updated code documentation." && git push
+git add . && git commit -m ":white_check_mark: Added feature xyz." && git push
+git add . && git commit -m ":wrench: Fixed xyz usage." && git push
+git add . && git commit -m ":heavy_minus_sign: Removed xyz." && git push
+git add . && git commit -m ":memo: Adjusted project imports." && git push
+git add . && git commit -m ":arrow_up: Updated dependencies." && git push
+git add . && git commit -m ":arrow_down: Removed dependencies." && git push
+git add . && git commit -m ":wastebasket: Removed unused code." && git push
+git add . && git commit -m ":test_tube: Added test functionality xyz." && git push
+git add . && git commit -m ":construction_worker: Building in progress." && git push
+git add . && git commit -m ":construction_worker: Added CI build system." && git push
+```
 
 ## License
 
