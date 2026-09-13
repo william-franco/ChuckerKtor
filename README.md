@@ -1,6 +1,27 @@
 # Chucker Ktor
 
-Sample Android app that lists posts from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com) using Ktor Client and inspects HTTP traffic via Chucker, with feature-based MVVM and Koin.
+Sample Android app that loads posts from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com) with Jetpack Compose and feature-based MVVM. HTTP calls use Ktor Client on the OkHttp engine; **Chucker** inspects requests and responses in debug builds. A settings feature persists dark theme via DataStore. The project demonstrates wiring Chucker as an OkHttp interceptor without changing repository or ViewModel code.
+
+## Structure
+
+```mermaid
+flowchart TB
+  subgraph postsFeature [posts]
+    PostRoute --> PostViewModel
+    PostViewModel --> PostRepository
+    PostRepository --> HttpService
+  end
+  HttpService --> KtorClient[Ktor OkHttp engine]
+  KtorClient --> ChuckerInterceptor
+  ChuckerInterceptor --> JSONPlaceholder[JSONPlaceholder API]
+  subgraph settingsFeature [settings]
+    SettingRoute --> SettingViewModel
+    SettingViewModel --> SettingRepository
+    SettingRepository --> DataStore
+  end
+  RoutesApp --> PostRoute
+  RoutesApp --> SettingRoute
+```
 
 ## Stack
 
