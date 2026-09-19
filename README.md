@@ -29,6 +29,7 @@ flowchart TB
 |------------|---------|
 | Android Gradle Plugin | 9.4.0 |
 | Kotlin | 2.2.10 |
+| NDK | 30.0.16248370 |
 | Compose BOM | 2026.02.01 |
 | Koin | 4.2.2 |
 | Navigation Compose | 2.9.3 |

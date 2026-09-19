@@ -10,6 +10,8 @@ android {
         version = release(37)
     }
 
+    ndkVersion = "30.0.16248370"
+
     defaultConfig {
         applicationId = "br.com.williamfranco.chuckerktor"
         minSdk = 29
